@@ -47,6 +47,11 @@ namespace connect.webhooks.Models
         [JsonProperty("updated_at")]
         public string UpdatedAt { get; set; }
 
+        public override string ToString()
+        {
+            const string NEW_LINE = "\r\n";
+            return $"{NEW_LINE}Connection Id : {ConnectionId}{NEW_LINE}Invitation Key: {InvitationKey}{NEW_LINE}State/Routing State : {State}/{RoutingState}{NEW_LINE}My Did : {MyDid}{NEW_LINE}Their Did: {TheirDid}{NEW_LINE}";
+        }
 
     }
 }

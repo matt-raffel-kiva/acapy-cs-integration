@@ -1,0 +1,50 @@
+{
+	"info": {
+		"_postman_id": "606847c8-d83c-4cd1-ba89-48cb44655612",
+		"name": "Webhooks",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "http://localhost:8124/connections",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8124/connections",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8124",
+					"path": [
+						"connections"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:8224/connections/ef89748c-fc5f-4217-8f39-8454aa905764/accept-request",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8224/connections/ef89748c-fc5f-4217-8f39-8454aa905764/accept-request",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8224",
+					"path": [
+						"connections",
+						"ef89748c-fc5f-4217-8f39-8454aa905764",
+						"accept-request"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"protocolProfileBehavior": {}
+}

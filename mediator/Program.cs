@@ -92,11 +92,14 @@ namespace connect.mediator
                 CreateInvitationResponse createInvitationResponse = await
                     Program.MakePostCall<CreateInvitationResponse, object>(Program.FABER, "connections/create-invitation?auto_accept=false&alias=For-Meditaor", null);
 
+                Program.PressAnyKey();
 
                 // 2.1 pass the invitation on to alice
                 Console.WriteLine("2.1 pass the invitation on to alice");
                 ReceiveInvitationReply receiveInvitationReply = await
                     Program.MakePostCall<ReceiveInvitationReply, Invitation>(Program.ALICE, "connections/receive-invitation?auto_accept=false&alias=For-Meditor", createInvitationResponse.invitation);
+
+                Program.PressAnyKey();
 
                 // 2.2 tell alice to accept invitation
                 Console.WriteLine("2.2 tell alice to accept invitation");
@@ -107,10 +110,12 @@ namespace connect.mediator
                 Program.PressAnyKey();
 
                 // WE HAVE A PROBLEM HERE:
-                // the connection ID needed is in faber and never communicated to us :/
+                // the connection ID needed is in faber. it is communicated through the webhook :/
                 Console.WriteLine("3.1 faber completes the connection");
                 object something = await
                     Program.MakePostCall<object, object>(Program.FABER, $"connections/{acceptInvitationReply.connection_id}/accept-request", null);
+
+                Program.PressAnyKey();
 
                 // Listing Faber connections
                 Console.WriteLine("Listing Faber connections");

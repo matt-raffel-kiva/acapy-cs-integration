@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using connect.webhooks.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
 
 // For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -37,7 +38,9 @@ namespace connect.webhooks.Controllers
                 bodyText = await reader.ReadToEndAsync();
             }
 
-            _logger.LogCritical($"**************\r\nv1/controller/{agentId}/{topic}/{subtopic} - {bodyText}\r\n****************");
+            Webhook data = JsonConvert.DeserializeObject<Webhook>(bodyText);
+            _logger.LogCritical($"\r\nAgent Id: {agentId} / topic : {topic} / subtopic : {subtopic}{data.ToString()}\r\n{bodyText}");
+
 
             return "Ok";
         }
