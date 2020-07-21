@@ -1,9 +1,9 @@
 
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "mediator", "mediator\connect.mediator.csproj", "{9DB16DDB-3A96-46E8-ABDA-CBE8BBE7CBBD}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "connect.mediator", "mediator\connect.mediator.csproj", "{9DB16DDB-3A96-46E8-ABDA-CBE8BBE7CBBD}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "webhooks", "webhooks\connect.webhooks.csproj", "{997529D9-067B-4D5A-9E1A-3C1FE0F49E10}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "connect.webhooks", "webhooks\connect.webhooks.csproj", "{997529D9-067B-4D5A-9E1A-3C1FE0F49E10}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

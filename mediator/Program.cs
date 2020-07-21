@@ -1,8 +1,11 @@
 ﻿using System;
 using System.Net.Http;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Hosting;
+using Microsoft.AspNetCore.Hosting;
 using Newtonsoft.Json;
 using connect.mediator.DTO;
+using connect.mediator.Webhook;
 
 namespace connect.mediator
 {
@@ -10,11 +13,8 @@ namespace connect.mediator
     class Program
     {
         private static HttpClient client = new HttpClient();
-        // private static string FABER = "localhost:8021";
         private static string ALICE = "localhost:8124";
         private static string FABER = "localhost:8224";
-        // private static string ALICE = "localhost:8031";
-
 
         private static async Task<string> GetResponse(HttpResponseMessage response, bool printResults = true)
         {
@@ -75,6 +75,9 @@ namespace connect.mediator
         {
             try
             {
+                Console.WriteLine("Setting up webhook listener");
+                _ = WebHostStartup.CreateHostBuilder(args).Build().RunAsync();
+                Program.PressAnyKey();
 
                 // Listing Faber connections
                 Console.WriteLine("Listing Faber connections");
