@@ -11,10 +11,12 @@ namespace connect.mediator.Webhook
     public class WebHookController : Controller
     {
         private readonly ILogger<WebHookController> _logger;
+        private readonly WebHookBroadcaster _broadcaster;
 
         public WebHookController(ILogger<WebHookController> logger)
         {
             _logger = logger;
+            _broadcaster = WebHookBroadcaster.Instance;
         }
 
         // GET: /<controller>/
@@ -33,22 +35,9 @@ namespace connect.mediator.Webhook
             }
 
             WebHookModel data = JsonConvert.DeserializeObject<WebHookModel>(bodyText);
-            _logger.LogCritical($"\r\nAgent Id: {agentId} / topic : {topic} / subtopic : {subtopic}{data.ToString()}\r\n{bodyText}");
+            _logger.LogCritical($"\r\nAgent Id: {agentId} / topic : {topic} / subtopic : {subtopic}{data.ToString()}\r\nentire message:{bodyText}");
 
-
-            return "Ok";
-        }
-
-        [HttpPost("{topic}/{subtopic}")]
-        public async Task<string> AcapyCallback(string topic, string subtopic)
-        {
-            string bodyText = "{}";
-            using (StreamReader reader = new StreamReader(Request.Body, Encoding.UTF8))
-            {
-                bodyText = await reader.ReadToEndAsync();
-            }
-
-            _logger.LogCritical($"**************\r\nv1/controller/{topic}/{subtopic} - {bodyText}\r\n****************");
+            _broadcaster.HaveReceivedWebHook(agentId, data);
 
             return "Ok";
         }

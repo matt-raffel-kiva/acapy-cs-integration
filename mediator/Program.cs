@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Hosting;
 using Newtonsoft.Json;
 using connect.mediator.DTO;
 using connect.mediator.Webhook;
+using Microsoft.AspNetCore.Mvc;
 
 namespace connect.mediator
 {
@@ -15,6 +16,8 @@ namespace connect.mediator
         private static HttpClient client = new HttpClient();
         private static string ALICE = "localhost:8124";
         private static string FABER = "localhost:8224";
+        public static WebHookModel FaberWebHookData = null;
+        public static WebHookModel AliceWebHookData = null;
 
         private static async Task<string> GetResponse(HttpResponseMessage response, bool printResults = true)
         {
@@ -64,6 +67,25 @@ namespace connect.mediator
             return jsonObject;
         }
 
+        private static void AddWebHookListenerEvent()
+        {           
+            WebHookBroadcaster.Instance.OnWebHookReceived += Broadcaster_OnWebHookReceived;
+        }
+
+        private static void RemoveWebHookListenerEvent()
+        {
+            WebHookBroadcaster.Instance.OnWebHookReceived -= Broadcaster_OnWebHookReceived;
+        }
+
+        private static void Broadcaster_OnWebHookReceived(string agentId, WebHookModel data)
+        {
+            Console.WriteLine($"webhook data recieved for {agentId}");
+            if (agentId == "faber")
+                Program.FaberWebHookData = data;
+            if (agentId == "alice")
+                Program.AliceWebHookData = data;
+        }
+
         private static void PressAnyKey()
         {
             Console.WriteLine("\r\nPress any key...");
@@ -106,6 +128,7 @@ namespace connect.mediator
 
                 // 2.2 tell alice to accept invitation
                 Console.WriteLine("2.2 tell alice to accept invitation");
+                Program.AddWebHookListenerEvent();
                 AcceptInvitationReply acceptInvitationReply = await
                     Program.MakePostCall<AcceptInvitationReply, object>(Program.ALICE, $"connections/{receiveInvitationReply.connection_id}/accept-invitation", null);
 
@@ -116,7 +139,7 @@ namespace connect.mediator
                 // the connection ID needed is in faber. it is communicated through the webhook :/
                 Console.WriteLine("3.1 faber completes the connection");
                 object something = await
-                    Program.MakePostCall<object, object>(Program.FABER, $"connections/{acceptInvitationReply.connection_id}/accept-request", null);
+                    Program.MakePostCall<object, object>(Program.FABER, $"connections/{Program.FaberWebHookData.ConnectionId}/accept-request", null);
 
                 Program.PressAnyKey();
 
@@ -127,6 +150,13 @@ namespace connect.mediator
                 // Listing Alice connections
                 Console.WriteLine("Listing Alice connections");
                 await Program.MakeGetCall<ConnectionsResponse>(Program.ALICE, "connections");
+
+                // publish schema
+                // http://localhost:8224/schemas
+
+                // publish credential definition
+                // http://localhost:8224/credential-definitions
+
 
             }
             catch (HttpRequestException e)
