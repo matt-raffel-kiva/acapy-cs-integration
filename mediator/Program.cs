@@ -93,6 +93,60 @@ namespace connect.mediator
             Console.WriteLine("");
         }
 
+        private static async Task CreateConnection()
+        {
+            // Listing Faber connections
+            Console.WriteLine("Listing Faber connections");
+            await Program.MakeGetCall<ConnectionsResponse>(Program.FABER, "connections");
+
+
+            // Listing Alice connections
+            Console.WriteLine("Listing Alice connections");
+            await Program.MakeGetCall<ConnectionsResponse>(Program.ALICE, "connections");
+
+            Program.PressAnyKey();
+
+            // 1.1  faber creates the invitation
+            Console.WriteLine("1.1  faber creates the invitation");
+            CreateInvitationResponse createInvitationResponse = await
+                Program.MakePostCall<CreateInvitationResponse, object>(Program.FABER, "connections/create-invitation?auto_accept=false&alias=For-Meditaor", null);
+
+            Program.PressAnyKey();
+
+            // 2.1 pass the invitation on to alice
+            Console.WriteLine("2.1 pass the invitation on to alice");
+            ReceiveInvitationReply receiveInvitationReply = await
+                Program.MakePostCall<ReceiveInvitationReply, Invitation>(Program.ALICE, "connections/receive-invitation?auto_accept=false&alias=For-Meditor", createInvitationResponse.invitation);
+
+            Program.PressAnyKey();
+
+            // 2.2 tell alice to accept invitation
+            Console.WriteLine("2.2 tell alice to accept invitation");
+            Program.AddWebHookListenerEvent();
+            AcceptInvitationReply acceptInvitationReply = await
+                Program.MakePostCall<AcceptInvitationReply, object>(Program.ALICE, $"connections/{receiveInvitationReply.connection_id}/accept-invitation", null);
+
+
+            Program.PressAnyKey();
+
+            // WE HAVE A PROBLEM HERE:
+            // the connection ID needed is in faber. it is communicated through the webhook :/
+            Console.WriteLine("3.1 faber completes the connection");
+            object something = await
+                Program.MakePostCall<object, object>(Program.FABER, $"connections/{Program.FaberWebHookData.ConnectionId}/accept-request", null);
+
+            Program.PressAnyKey();
+            Program.RemoveWebHookListenerEvent();
+
+            // Listing Faber connections
+            Console.WriteLine("Listing Faber connections");
+            await Program.MakeGetCall<ConnectionsResponse>(Program.FABER, "connections");
+
+            // Listing Alice connections
+            Console.WriteLine("Listing Alice connections");
+            await Program.MakeGetCall<ConnectionsResponse>(Program.ALICE, "connections");
+        }
+
         static async Task Main(string[] args)
         {
             try
@@ -101,55 +155,7 @@ namespace connect.mediator
                 _ = WebHostStartup.CreateHostBuilder(args).Build().RunAsync();
                 Program.PressAnyKey();
 
-                // Listing Faber connections
-                Console.WriteLine("Listing Faber connections");
-                await Program.MakeGetCall<ConnectionsResponse>(Program.FABER, "connections");
-
-
-                // Listing Alice connections
-                Console.WriteLine("Listing Alice connections");
-                await Program.MakeGetCall<ConnectionsResponse>(Program.ALICE, "connections");
-
-                Program.PressAnyKey();
-
-                // 1.1  faber creates the invitation
-                Console.WriteLine("1.1  faber creates the invitation");
-                CreateInvitationResponse createInvitationResponse = await
-                    Program.MakePostCall<CreateInvitationResponse, object>(Program.FABER, "connections/create-invitation?auto_accept=false&alias=For-Meditaor", null);
-
-                Program.PressAnyKey();
-
-                // 2.1 pass the invitation on to alice
-                Console.WriteLine("2.1 pass the invitation on to alice");
-                ReceiveInvitationReply receiveInvitationReply = await
-                    Program.MakePostCall<ReceiveInvitationReply, Invitation>(Program.ALICE, "connections/receive-invitation?auto_accept=false&alias=For-Meditor", createInvitationResponse.invitation);
-
-                Program.PressAnyKey();
-
-                // 2.2 tell alice to accept invitation
-                Console.WriteLine("2.2 tell alice to accept invitation");
-                Program.AddWebHookListenerEvent();
-                AcceptInvitationReply acceptInvitationReply = await
-                    Program.MakePostCall<AcceptInvitationReply, object>(Program.ALICE, $"connections/{receiveInvitationReply.connection_id}/accept-invitation", null);
-
-
-                Program.PressAnyKey();
-
-                // WE HAVE A PROBLEM HERE:
-                // the connection ID needed is in faber. it is communicated through the webhook :/
-                Console.WriteLine("3.1 faber completes the connection");
-                object something = await
-                    Program.MakePostCall<object, object>(Program.FABER, $"connections/{Program.FaberWebHookData.ConnectionId}/accept-request", null);
-
-                Program.PressAnyKey();
-
-                // Listing Faber connections
-                Console.WriteLine("Listing Faber connections");
-                await Program.MakeGetCall<ConnectionsResponse>(Program.FABER, "connections");
-
-                // Listing Alice connections
-                Console.WriteLine("Listing Alice connections");
-                await Program.MakeGetCall<ConnectionsResponse>(Program.ALICE, "connections");
+                await Program.CreateConnection();
 
                 // publish schema
                 // http://localhost:8224/schemas
