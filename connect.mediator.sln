@@ -3,8 +3,6 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "connect.mediator", "mediator\connect.mediator.csproj", "{9DB16DDB-3A96-46E8-ABDA-CBE8BBE7CBBD}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "connect.webhooks", "webhooks\connect.webhooks.csproj", "{997529D9-067B-4D5A-9E1A-3C1FE0F49E10}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,9 +13,5 @@ Global
 		{9DB16DDB-3A96-46E8-ABDA-CBE8BBE7CBBD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9DB16DDB-3A96-46E8-ABDA-CBE8BBE7CBBD}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9DB16DDB-3A96-46E8-ABDA-CBE8BBE7CBBD}.Release|Any CPU.Build.0 = Release|Any CPU
-		{997529D9-067B-4D5A-9E1A-3C1FE0F49E10}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{997529D9-067B-4D5A-9E1A-3C1FE0F49E10}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{997529D9-067B-4D5A-9E1A-3C1FE0F49E10}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{997529D9-067B-4D5A-9E1A-3C1FE0F49E10}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
